@@ -33,7 +33,7 @@ public class BarrigaTest extends BaseTest {
         login.put("email", "antunes_jaqueline@yahoo.com.br");
         login.put("senha", "123456");
 
-         String TOKEN =given()
+        String TOKEN =given()
                 .body(login)
                 .when()
                 .post("/signin")
@@ -52,9 +52,9 @@ public class BarrigaTest extends BaseTest {
 
         CONTA_ID = given()
                 .body("{\"nome\":\""+ CONTA_NAME +"\"}")
-        .when()
+                .when()
                 .post("/contas")
-        .then()
+                .then()
                 .statusCode(201)
                 .extract().path("id");
         ;
@@ -65,9 +65,9 @@ public class BarrigaTest extends BaseTest {
         given()
                 .body("{\"nome\":\""+ CONTA_NAME +" alterada\"}")
                 .pathParam("id",CONTA_ID)
-        .when()
+                .when()
                 .put("/contas/{id}")
-        .then()
+                .then()
                 .statusCode(200)
                 .body("nome", is(CONTA_NAME +" alterada"))
         ;
@@ -75,23 +75,23 @@ public class BarrigaTest extends BaseTest {
 
     @Test
     public void t_04_naoDeveInserirContaComMesmoNome(){
-            given()
+        given()
                 .body("{\"nome\":\""+ CONTA_NAME +" alterada\"}")
-            .when()
+                .when()
                 .post("/contas")
-            .then()
+                .then()
                 .statusCode(400)
                 .body("error",is("Já existe uma conta com esse nome!"))
-            ;
+        ;
     }
     @Test
     public void t_05_deveInserirMovimentacaoComSucesso(){
 
         MOVIMENTACAO_ID =given()
                 .body(getMovimentacaoValida())
-        .when()
+                .when()
                 .post("/transacoes")
-        .then()
+                .then()
                 .statusCode(201)
                 .extract().path("id")
 
@@ -103,9 +103,9 @@ public class BarrigaTest extends BaseTest {
 
         given()
                 .body("{}")
-        .when()
+                .when()
                 .post("/transacoes")
-        .then()
+                .then()
                 .statusCode(400)
                 .body("$", hasSize(8))
                 .body("msg",hasItems(
@@ -128,9 +128,9 @@ public class BarrigaTest extends BaseTest {
 
         given()
                 .body(mov)
-        .when()
+                .when()
                 .post("/transacoes")
-        .then()
+                .then()
                 .statusCode(400)
                 .body("$", hasSize(1))
                 .body("msg", hasItems("Data da Movimentação deve ser menor ou igual à data atual"))
@@ -142,9 +142,9 @@ public class BarrigaTest extends BaseTest {
 
         given()
                 .pathParam("id",CONTA_ID)
-        .when()
+                .when()
                 .delete("/contas/{id}")
-        .then()
+                .then()
                 .statusCode(500)
                 .body("constraint",is("transacoes_conta_id_foreign"))
         ;
@@ -153,9 +153,9 @@ public class BarrigaTest extends BaseTest {
     public void t_09_deveCalcularSaldoContas(){
 
         given()
-        .when()
+                .when()
                 .get("/saldo")
-        .then()
+                .then()
                 .statusCode(200)
                 .body("find{it.conta_id=="+CONTA_ID+"}.saldo", is("100.00"))
         ;
@@ -165,9 +165,9 @@ public class BarrigaTest extends BaseTest {
 
         given()
                 .pathParam("id",MOVIMENTACAO_ID)
-        .when()
+                .when()
                 .delete("/transacoes/{id}")
-        .then()
+                .then()
                 .statusCode(204)
         ;
 
